@@ -7,36 +7,36 @@ class Token
   end
 
   def get_token_type(token_type)
-    case token_type
-    when Analyzer::IDENTIFIER
+    case token_type&.downcase&.to_sym
+    when Analyzer::TOKEN_TYPE.key(0)
       return "IDENTIFICATOR"
-    when Analyzer::KEYWORD
+    when Analyzer::TOKEN_TYPE.key(1)
       return "CUVANT CHEIE"
-    when Analyzer::STRING
+    when Analyzer::TOKEN_TYPE.key(2)
       return "STRING"
-    when Analyzer::INTEGER
+    when Analyzer::TOKEN_TYPE.key(3)
       return "INTEGER"
-    when Analyzer::FLOAT
+    when Analyzer::TOKEN_TYPE.key(4)
       return "FLOAT"
-    when Analyzer::HEXADEIMAL
-      return "HEXADEIMAL"
-    when Analyzer::COMMENT
+    when Analyzer::TOKEN_TYPE.key(5)
+      return "HEXADECIMAL"
+    when Analyzer::TOKEN_TYPE.key(6)
       return "COMMENTARIU"
-    when Analyzer::WHITESPACEC
+    when Analyzer::TOKEN_TYPE.key(7)
       return "SPATIU"
-    when Analyzer::OPERATOR
+    when Analyzer::TOKEN_TYPE.key(8)
       return "OPERATOR"
-    when Analyzer::SEPARATOR
+    when Analyzer::TOKEN_TYPE.key(9)
       return "SEPARATOR"
-    when Analyzer::ERROR
+    when Analyzer::TOKEN_TYPE.key(10)
       return "EROARE"
-    when Analyzer::INVALID_TOKEN
+    when Analyzer::TOKEN_TYPE.key(11)
     else
       return "TOKEN_GRESIT"
     end
   end
 
   def get_string(lexical_analyzer)
-    get_token_type(type) + " - " + lexical_analyzer.get_value(type)
+    get_token_type(type) + " - " + lexical_analyzer.get_value(value)
   end
 end

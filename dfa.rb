@@ -8,7 +8,7 @@ class Dfa
   #   :is_letter, :is_first_char_for_id, :is_char_for_id, :is_not_char_for_id, :is_new_line,
   #   :is_x, :is_l, :is_u, :transitions
 
-  attr_accessor :fp, :file_name, :transitions
+  attr_accessor :fp, :file_name, :transitions, :file_position
 
   STATE = {
     initial: 0,
@@ -255,7 +255,7 @@ class Dfa
     value == '\n'
   end
 
-  def anything
+  def anything(value)
     true
   end
 
@@ -294,7 +294,6 @@ class Dfa
   def initialize(file_name)
     @file_name = file_name
     @transitions = {}
-    binding.pry
     initial_list = []
     initial_list.push([method(:is_zero).to_proc, STATE[:zero]])
     initial_list.push([method(:is_plus).to_proc, STATE[:plus]])
@@ -560,31 +559,33 @@ class Dfa
     operator_list = []
     operator_list.push([method(:anything).to_proc, STATE[:end]])
     transitions[STATE[:operator]] = operator_list
+
+    @file_position = 0
   end
 
   def execute
     current_state = STATE[:initial]
-    file_position = 0
+    # file_position = 0
     token_value = ""
 
     File.open(file_name, "r") do |f|
+      f.seek(@file_position, IO::SEEK_SET)
       f.each_char do |c|
-        file_position += 1
+        @file_position += 1
         state_transitions = transitions[current_state]
 
-        state_transitions.each do |transition|
-          binding.pry
+        state_transitions&.each do |transition|
           transition_function = transition.first
           next_state = transition.last
 
           if (transition_function.call(c))
             if next_state == STATE[:error]
-              [STATE[:error], token_value]
+              return [STATE[:error], token_value]
             end
 
             if (next_state == STATE[:end])
-              file_position -= 1
-              [current_state, token_value]
+              @file_position -= 1
+              return [current_state, token_value]
             end
 
             current_state = next_state
@@ -597,13 +598,21 @@ class Dfa
 
     state_transitions = transitions[current_state]
 
-    state_transitions.each do |transition|
-      next_state = transition.second
+    state_transitions&.each do |transition|
+      next_state = transition.last
       if (next_state == STATE[:end])
         [current_state, token_value]
       end
     end
 
     [STATE[:error], token_value]
+  end
+
+  def is_EOF
+    !fp || fp.eof?
+  end
+
+  def get_position
+    @file_position
   end
 end

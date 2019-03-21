@@ -31,6 +31,10 @@ class Analyzer
   end
 
   def get_token
+    if dfa.is_EOF
+      return
+    end
+
     r = dfa.execute
     final_state = r.first
     token_value = r.last
@@ -43,14 +47,14 @@ class Analyzer
     token_type = ""
 
     if (KEYWORDS.include? token_value)
-      token_type = KEYWORD
+      token_type = TOKEN_TYPE.key(1)
     else
       token_type = get_token_type(final_state)
     end
 
     return if token_type == "INVALID_TOKEN"
-    return get_token() if token_type == "COMMENT"
-    return get_token() if token_type == "WHITESPACE"
+    return get_token if token_type == "COMMENT"
+    return get_token if token_type == "WHITESPACE"
 
     string_list_index = 0
     if (strings_list.include? token_value)
@@ -69,39 +73,39 @@ class Analyzer
       return "STRING"
     when Dfa::STATE[:char_end]
       return "CHAR"
-    when Dfa::STATE[:multi_line_comment_end]
-    when Dfa::STATE[:single_line_comment]
+    when Dfa::STATE[:multi_line_comment_end],
+      Dfa::STATE[:single_line_comment]
       return "COMMENT"
     when Dfa::STATE[:non_token_separator]
       return "WHITESPACE"
-    when Dfa::STATE[:number]
-    when Dfa::STATE[:number_u]
-    when Dfa::STATE[:number_l]
-    when Dfa::STATE[:number_ul]
-    when Dfa::STATE[:zero]
+    when Dfa::STATE[:number],
+      Dfa::STATE[:number_u],
+      Dfa::STATE[:number_l],
+      Dfa::STATE[:number_ul],
+      Dfa::STATE[:zero]
       return "INTEGER"
     when Dfa::STATE[:hexa]
       return "HEXADECIMAL"
-    when Dfa::STATE[:float_number]
-    when Dfa::STATE[:exponent]
-    when Dfa::STATE[:exponent_value]
-    when Dfa::STATE[:float_number_l]
+    when Dfa::STATE[:float_number],
+      Dfa::STATE[:exponent],
+      Dfa::STATE[:exponent_value],
+      Dfa::STATE[:float_number_l]
       return "FLOAT"
-    when Dfa::STATE[:plus]
-    when Dfa::STATE[:minus]
-    when Dfa::STATE[:star]
-    when Dfa::STATE[:slash]
-    when Dfa::STATE[:mod]
-    when Dfa::STATE[:equal]
-    when Dfa::STATE[:less_than]
-    when Dfa::STATE[:greater_than]
-    when Dfa::STATE[:and]
-    when Dfa::STATE[:not]
-    when Dfa::STATE[:or]
-    when Dfa::STATE[:xor]
-    when Dfa::STATE[:shift_right]
-    when Dfa::STATE[:shift_left]
-    when Dfa::STATE[:point]
+    when Dfa::STATE[:plus],
+      Dfa::STATE[:minus],
+      Dfa::STATE[:star],
+      Dfa::STATE[:slash],
+      Dfa::STATE[:mod],
+      Dfa::STATE[:equal],
+      Dfa::STATE[:less_than],
+      Dfa::STATE[:greater_than],
+      Dfa::STATE[:and],
+      Dfa::STATE[:not],
+      Dfa::STATE[:or],
+      Dfa::STATE[:xor],
+      Dfa::STATE[:shift_right],
+      Dfa::STATE[:shift_left],
+      Dfa::STATE[:point]
       return "OPERATOR"
     when Dfa::STATE[:separator]
       return "SEPARATOR"

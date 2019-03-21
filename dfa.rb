@@ -1,13 +1,6 @@
 require "pry"
 
 class Dfa
-  # attr_accessor :fp, :file_name, :is_minus, :is_plus,
-  #   :is_star, :is_slash, :is_mod, :is_equal, :is_less, :is_greater, :is_and,
-  #   :is_not, :is_or, :is_xor, :is_point, :is_separator, :is_operator, :is_non_token, :is_single_quote,
-  #   :is_double_quote, :is_e, :is_hexa, :is_char, :is_digit, :is_escape, :anything,
-  #   :is_letter, :is_first_char_for_id, :is_char_for_id, :is_not_char_for_id, :is_new_line,
-  #   :is_x, :is_l, :is_u, :transitions
-
   attr_accessor :fp, :file_name, :transitions, :file_position
 
   STATE = {
@@ -118,14 +111,14 @@ class Dfa
 
   def is_separator(value)
     case value
-    when ';'
-    when ','
-    when '{'
-    when '}'
-    when ']'
-    when '['
-    when ')'
-    when '('
+    when ";",
+      ",",
+      "{",
+      "}",
+      "]",
+      "[",
+      ")",
+      "("
       return true
     else
       return false
@@ -134,8 +127,8 @@ class Dfa
 
   def is_operator(value)
     case value
-    when ':'
-    when '?'
+    when ":",
+      "?"
       return true
     else
       return false
@@ -144,91 +137,21 @@ class Dfa
 
   def is_non_token(value)
     case value
-    when '\n'
-    when '\t'
-    when ' '
+    when "\n",
+      "\t",
+      " "
       return true
     else
       return false
     end
   end
 
-
-  # is_zero      = lambda { |value| return value == '0' }
-  # is_plus      = lambda { |value| return value == '+' }
-  # is_minus     = lambda { |value| return value == '-' }
-  # is_star      = lambda { |value| return value == '*' }
-  # is_slash     = lambda { |value| return value == '/' }
-  # is_mod       = lambda { |value| return value == '%' }
-  # is_equal     = lambda { |value| return value == '=' }
-  # is_less      = lambda { |value| return value == '<' }
-  # is_greater   = lambda { |value| return value == '>' }
-  # is_and       = lambda { |value| return value == '&' }
-  # is_not       = lambda { |value| return value == '!' }
-  # is_or        = lambda { |value| return value == '|' }
-  # is_xor       = lambda { |value| return value == '^' }
-  # is_point     = lambda { |value| return value == '.' }
-
-  # is_separator = lambda do |value|
-  #   case value
-  #   when ';'
-  #   when ','
-  #   when '{'
-  #   when '}'
-  #   when ']'
-  #   when '['
-  #   when ')'
-  #   when '('
-  #     return true
-  #   else
-  #     return false
-  #   end
-  # end
-
-  # is_operator = lambda do |value|
-  #   case value
-  #   when ':'
-  #   when '?'
-  #     return true
-  #   else
-  #     return false
-  #   end
-  # end
-
-  # is_non_token = lambda do |value|
-  #   case value
-  #   when '\n'
-  #   when '\t'
-  #   when ' '
-  #     return true
-  #   else
-  #     return false
-  #   end
-  # end
-
-  # is_single_quote = lambda { |value| return value == "\'" }
-  # is_double_quote = lambda { |value| return value == '\"' }
-  # is_e            = lambda { |value| return value == 'e'  }
-  # is_char         = lambda { |value| return value >= 32 && value <= 126 }
-  # is_digit        = lambda { |value| return value >= '0' && value <= '9' }
-  # is_hexa         = lambda { |v| return is_digit.call(v) || ('a' <= v && v <= 'f') }
-  # is_escape       = lambda { |value| return value == '\\' }
-  # is_new_line     = lambda { |value| return value == '\n' }
-  # anything        = lambda { |value| return true }
-  # is_letter       = lambda { |v| return ('a' <= v && v <= 'z') || ('A' <= v && v <= 'Z') }
-  # is_first_char_for_id = lambda { |value| return is_letter.call(value) || value == '_' }
-  # is_char_for_id  = lambda { |value| is_first_char_for_id.call(value) || is_digit.call(value) }
-  # is_not_char_for_id = lambda { |value| !is_char_for_id.call(value) }
-  # is_x            = lambda { |value| return value == 'x' }
-  # is_l            = lambda { |value| return value == 'c' }
-  # is_u            = lambda { |value| return value == 'u' }
-
   def is_single_quote(value)
     value == "\'"
   end
 
   def is_double_quote(value)
-    value == '\"'
+    value == "\""
   end
 
   def is_e(value)
@@ -236,7 +159,7 @@ class Dfa
   end
 
   def is_char(value)
-    value >= 32 && value <= 126
+    value.ord >= 32 && value.ord <= 126
   end
 
   def is_digit(value)
@@ -248,11 +171,11 @@ class Dfa
   end
 
   def is_escape(value)
-    value == '\\'
+    value == "\\"
   end
 
   def is_new_line(value)
-    value == '\n'
+    value == "\n"
   end
 
   def anything(value)
@@ -260,7 +183,7 @@ class Dfa
   end
 
   def is_letter(value)
-    ('a' <= value && value <= 'z') || ('A' <= value && v <= 'Z')
+    ('a' <= value && value <= 'z') || ('A' <= value && value <= 'Z')
   end
 
   def is_first_char_for_id(value)
@@ -432,7 +355,7 @@ class Dfa
     char_list.push([method(:is_escape).to_proc, STATE[:char_escape]])
     char_list.push([method(:is_char).to_proc, STATE[:char_character]])
     char_list.push([method(:anything).to_proc, STATE[:error]])
-    transitions[STATE[:char_escape]] = char_list
+    transitions[STATE[:char]] = char_list
 
     char_character_list = []
     char_character_list.push([method(:is_single_quote).to_proc, STATE[:char_end]])
@@ -565,7 +488,6 @@ class Dfa
 
   def execute
     current_state = STATE[:initial]
-    # file_position = 0
     token_value = ""
 
     File.open(file_name, "r") do |f|
@@ -600,16 +522,17 @@ class Dfa
 
     state_transitions&.each do |transition|
       next_state = transition.last
+
       if (next_state == STATE[:end])
-        [current_state, token_value]
+        return [current_state, token_value]
       end
     end
 
-    [STATE[:error], token_value]
+    return [STATE[:error], token_value]
   end
 
   def is_EOF
-    !fp || fp.eof?
+    @file_position >= File.open(file_name, "r").size
   end
 
   def get_position

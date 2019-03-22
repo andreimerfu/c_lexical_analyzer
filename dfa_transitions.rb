@@ -193,7 +193,7 @@ def dfa_transitions
   number_list = []
   number_list.push([method(:is_digit).to_proc, STATE[:number]])
   number_list.push([method(:is_point).to_proc, STATE[:float_number]])
-  number_list.push([method(:is_e).to_proc, STATE[:exponent_value]])
+  number_list.push([method(:is_e).to_proc, STATE[:exponent]])
   number_list.push([method(:is_l).to_proc, STATE[:number_l]])
   number_list.push([method(:is_u).to_proc, STATE[:number_u]])
   number_list.push([method(:anything).to_proc, STATE[:end]])

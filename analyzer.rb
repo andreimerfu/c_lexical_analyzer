@@ -8,14 +8,15 @@ class Analyzer
     keyword: 1,
     string: 2,
     char: 3,
-    float: 4,
-    hexadecimal: 5,
-    comment: 6,
-    whitespace: 7,
-    operator: 8,
-    separator: 9,
-    error: 10,
-    invalid_token: 11
+    integer: 4,
+    float: 5,
+    hexadecimal: 6,
+    comment: 7,
+    whitespace: 8,
+    operator: 9,
+    separator: 10,
+    error: 11,
+    invalid_token: 12
   }.freeze
 
   KEYWORDS = [

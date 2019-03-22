@@ -193,6 +193,7 @@ def dfa_transitions
   number_list = []
   number_list.push([method(:is_digit).to_proc, STATE[:number]])
   number_list.push([method(:is_point).to_proc, STATE[:float_number]])
+  number_list.push([method(:is_e).to_proc, STATE[:exponent_value]])
   number_list.push([method(:is_l).to_proc, STATE[:number_l]])
   number_list.push([method(:is_u).to_proc, STATE[:number_u]])
   number_list.push([method(:anything).to_proc, STATE[:end]])
@@ -223,8 +224,13 @@ def dfa_transitions
   exponent_list.push([method(:is_minus).to_proc, STATE[:exponent_value]])
   exponent_list.push([method(:is_plus).to_proc, STATE[:exponent_value]])
   exponent_list.push([method(:is_digit).to_proc, STATE[:exponent_value]])
-  exponent_list.push([method(:anything).to_proc, STATE[:error]]) # ERROR DACA ESTE EXPONENT
+  exponent_list.push([method(:anything).to_proc, STATE[:error]])
   transitions[STATE[:exponent]] = exponent_list
+
+  ev_list = []
+  ev_list.push([method(:is_digit).to_proc, STATE[:exponent_value]])
+  ev_list.push([method(:anything).to_proc, STATE[:end]])
+  transitions[STATE[:exponent_value]] = ev_list
 
   float_number_l_list = []
   float_number_l_list.push([method(:anything).to_proc, STATE[:end]])

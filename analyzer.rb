@@ -106,7 +106,9 @@ class Analyzer
       Dfa::STATE[:xor],
       Dfa::STATE[:shift_right],
       Dfa::STATE[:shift_left],
-      Dfa::STATE[:point]
+      Dfa::STATE[:point],
+      Dfa::STATE[:s_s_operator],
+      Dfa::STATE[:sign_equal_operator]
       return "OPERATOR"
     when Dfa::STATE[:separator]
       return "SEPARATOR"

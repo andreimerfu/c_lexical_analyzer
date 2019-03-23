@@ -45,5 +45,7 @@ DFA_STATE = {
   float_number_l: 43,
   operator: 44,
   end: 45,
-  error: 46
+  error: 46,
+  s_s_operator: 47,
+  sign_equal_operator: 48
 }.freeze

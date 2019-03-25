@@ -58,7 +58,7 @@ class Dfa
   end
 
   def is_EOF
-    @file_position >= File.open(file_name, "r").size
+    @file_position >= file_content.length
   end
 
   def get_position

@@ -36,23 +36,16 @@ def dfa_transitions
   transitions[STATE[:identifier]] = identifier_list
 
   plus_list = []
-  plus_list.push([method(:is_plus).to_proc, STATE[:s_s_operator]])
-  plus_list.push([method(:is_equal).to_proc, STATE[:sign_equal_operator]])
+  plus_list.push([method(:is_plus).to_proc, STATE[:operator]])
+  plus_list.push([method(:is_equal).to_proc, STATE[:plus]])
+  plus_list.push([method(:is_equal).to_proc, STATE[:operator]])
   plus_list.push([method(:anything).to_proc, STATE[:end]])
   transitions[STATE[:plus]] = plus_list
 
-  plus_operator_list = []
-  plus_operator_list.push([method(:anything).to_proc, STATE[:end]])
-  transitions[STATE[:s_s_operator]] = plus_operator_list
-
-  sign_equal_operator_list = []
-  sign_equal_operator_list.push([method(:anything).to_proc, STATE[:end]])
-  transitions[STATE[:sign_equal_operator]] = sign_equal_operator_list
-
   minus_list = []
-  minus_list.push([method(:is_minus).to_proc, STATE[:s_s_operator]])
+  minus_list.push([method(:is_minus).to_proc, STATE[:operator]])
   minus_list.push([method(:is_greater).to_proc, STATE[:operator]])
-  minus_list.push([method(:is_equal).to_proc, STATE[:sign_equal_operator]])
+  minus_list.push([method(:is_equal).to_proc, STATE[:operator]])
   minus_list.push([method(:is_digit).to_proc, STATE[:number]])
   minus_list.push([method(:anything).to_proc, STATE[:end]])
   transitions[STATE[:minus]] = minus_list
